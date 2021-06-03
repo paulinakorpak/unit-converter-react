@@ -14,14 +14,25 @@ function App() {
   const [category, setCategory] = useState(categories[0]);
   const [unitFrom, setUnitFrom] = useState(units[0]);
   const [unitTo, setUnitTo] = useState(units[1]);
+  const [valueFrom, setValueFrom] = useState(0);
+  const [valueTo, setValueTo] = useState(0);
 
   useEffect(
     () => {
       units = Converter.getUnitsByCategory(category);
       setUnitFrom(units[0]);
       setUnitTo(units[1]);
+      setValueFrom(0);
+      setValueTo(0);
     },
     [category],
+  );
+
+  useEffect(
+    () => {
+      setValueTo(Converter.convert(category, unitFrom, unitTo, valueFrom));
+    },
+    [unitFrom, unitTo, valueFrom],
   );
 
   return (
@@ -36,7 +47,10 @@ function App() {
             categories={categories}
           />
           <FormRow>
-            <ValueInput />
+            <ValueInput
+              value={valueFrom}
+              setValue={setValueFrom}
+            />
             <UnitSelector
               currentUnit={unitFrom}
               setUnit={setUnitFrom}
@@ -44,7 +58,10 @@ function App() {
             />
           </FormRow>
           <FormRow>
-            <ValueInput />
+            <ValueInput
+              disabled
+              value={valueTo}
+            />
             <UnitSelector
               currentUnit={unitTo}
               setUnit={setUnitTo}
